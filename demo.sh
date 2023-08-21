@@ -9,10 +9,17 @@ openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -subj
 # Hash the content of the text file
 openssl dgst -sha256 -binary < data.txt > digest.txt
 
+
 # Sign the hash using the private key and create a CMS Signed Data structure
 openssl cms -sign -in digest.txt -signer cert.pem -inkey key.pem -out signature.p7s
 
+echo "-----BEGIN CMS-----" > signature.p7s.new
+cat signature.p7s >> signature.p7s.new
+echo "" >> signature.p7s.new # Add a newline character
+mv signature.p7s.new signature.p7s
+
 # Verify the signature
+echo "Verifying ..."
 openssl cms -verify -in signature.p7s -inform PEM -content digest.txt -out verified.txt
 
 # Compare the original content and the verified content
@@ -23,4 +30,4 @@ else
 fi
 
 # Clean up temporary files
-rm data.txt digest.txt signature.p7s verified.txt key.pem cert.pem
+# rm data.txt digest.txt signature.p7s verified.txt key.pem cert.pem
