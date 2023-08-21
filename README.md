@@ -1,4 +1,4 @@
-# cms-signed-data
+# CMS Signed Data Example
 CMS (Cryptographic Message Syntax) Signed Data structure example
 
 ## Background
